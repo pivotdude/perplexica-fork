@@ -15,8 +15,8 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: 'Perplexica - Chat with the internet',
-  description:
-    'Perplexica is an AI powered chatbot that is connected to the internet.',
+  description: 'Perplexica is an AI powered chatbot that is connected to the internet.',
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
@@ -26,6 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html className="h-full" lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#000000" />
+      </head>
       <body className={cn('h-full', montserrat.className)}>
         <ThemeProvider>
           <Sidebar>{children}</Sidebar>
