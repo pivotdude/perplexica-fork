@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+import withPWA from 'next-pwa';
+
 const nextConfig = {
   output: 'standalone',
   images: {
@@ -11,4 +13,9 @@ const nextConfig = {
   serverExternalPackages: ['pdf-parse'],
 };
 
-export default nextConfig;
+const pwaConfig = withPWA({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+})(nextConfig);
+
+export default pwaConfig;
