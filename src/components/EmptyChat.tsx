@@ -1,8 +1,10 @@
-import { Settings } from 'lucide-react';
+import { Milestone, Settings } from 'lucide-react';
 import EmptyChatMessageInput from './EmptyChatMessageInput';
 import { useState } from 'react';
 import { File } from './ChatWindow';
 import Link from 'next/link';
+import { AuthContainers } from './AuthContainers';
+import { useSession } from 'next-auth/react';
 
 const EmptyChat = ({
   sendMessage,
@@ -25,14 +27,24 @@ const EmptyChat = ({
   files: File[];
   setFiles: (files: File[]) => void;
 }) => {
+  const session = useSession();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
     <div className="relative">
       <div className="absolute w-full flex flex-row items-center justify-end mr-5 mt-5">
-        <Link href="/settings">
-          <Settings className="cursor-pointer lg:hidden" />
-        </Link>
+        <div className='flex lg:hidden'>
+          {session.data?.user?.role === 'admin' && (
+                  <Link href="/admin" className='relative flex flex-col items-center space-y-1 text-center p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 w-full'>
+                    <Milestone className="cursor-pointer w-full" />
+                  </Link>
+                )}
+                <AuthContainers sessionStatus={session.status} />
+
+          <Link href="/settings" className='relative flex flex-col items-center space-y-1 text-center w-full p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10'>
+            <Settings className="cursor-pointer" />
+          </Link>
+        </div>
       </div>
       <div className="flex flex-col items-center justify-center min-h-screen max-w-screen-sm mx-auto p-2 space-y-8">
         <h2 className="text-black/70 dark:text-white/70 text-3xl font-medium -mt-8">
