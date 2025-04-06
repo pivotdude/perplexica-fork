@@ -5,11 +5,13 @@
   "author": "ItzCrazyKns",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run db:push && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "format:write": "prettier . --write",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "db:migrate": "drizzle-kit migrate",
+    "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -28,6 +30,7 @@
     "clsx": "^2.1.0",
     "compute-cosine-similarity": "^1.1.0",
     "compute-dot": "^1.1.0",
+    "drizzle-kit": "^0.30.6",
     "drizzle-orm": "^0.40.1",
     "html-to-text": "^9.0.5",
     "langchain": "^0.1.30",
@@ -40,6 +43,7 @@
     "react-dom": "^18",
     "react-text-to-speech": "^0.14.5",
     "react-textarea-autosize": "^8.5.3",
+    "sharp": "^0.34.0",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.2.2",
     "winston": "^3.17.0",
@@ -54,7 +58,6 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
-    "drizzle-kit": "^0.30.5",
     "eslint": "^8",
     "eslint-config-next": "14.1.4",
     "postcss": "^8",
