@@ -13,6 +13,5 @@ services:
     volumes:
       - ./perplexica/backend-dbstore:/home/perplexica/data
       - ./perplexica/uploads:/home/perplexica/uploads
-      - ./drizzle:/home/perplexica/drizzle
       - ./perplexica/config.toml:/home/perplexica/config.toml:rw
     restart: unless-stopped

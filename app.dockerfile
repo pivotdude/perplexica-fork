@@ -29,6 +29,7 @@ WORKDIR /home/perplexica
 COPY tsconfig.json next.config.mjs next-env.d.ts postcss.config.js drizzle.config.ts tailwind.config.ts ./
 COPY src ./src
 COPY public ./public
+COPY drizzle ./drizzle
 RUN mkdir -p /home/perplexica/data
 RUN bun run build
 
@@ -37,6 +38,7 @@ FROM prod-deps AS production
 WORKDIR /home/perplexica
 COPY --from=builder /home/perplexica/src/lib/db ./src/lib/db
 COPY --from=builder /home/perplexica/drizzle.config.ts ./
+COPY --from=builder /home/perplexica/drizzle ./drizzle
 COPY --from=builder /home/perplexica/public ./public
 COPY --from=builder /home/perplexica/.next/static ./public/_next/static
 COPY --from=builder /home/perplexica/.next/standalone ./
