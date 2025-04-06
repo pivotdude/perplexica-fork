@@ -1,11 +1,13 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { BookOpenText, Home, Search, SquarePen, Settings } from 'lucide-react';
+import { BookOpenText, Home, Search, SquarePen, Settings, LogOutIcon, LogIn, Milestone } from 'lucide-react';
 import Link from 'next/link';
 import { useSelectedLayoutSegments } from 'next/navigation';
 import React, { useState, type ReactNode } from 'react';
 import Layout from './Layout';
+import { useSession } from 'next-auth/react';
+import { Loader } from './ui/Loader';
 
 const VerticalIconContainer = ({ children }: { children: ReactNode }) => {
   return (
@@ -13,7 +15,52 @@ const VerticalIconContainer = ({ children }: { children: ReactNode }) => {
   );
 };
 
+const AuthContainers = ({sessionStatus}: {sessionStatus: "authenticated" | "unauthenticated" | "loading"}) => {
+  if (sessionStatus === 'loading') {
+    return (
+      <Loader />
+    );
+  }
+
+  return (
+    <>
+      {sessionStatus === 'authenticated' ? (
+        <div>
+        <Link
+          href="/api/auth/signout"
+          className="relative flex flex-col items-center space-y-1 text-center w-full p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10"
+        >
+          <LogOutIcon className="" />
+          <p className="text-xs">Logout</p>
+        </Link>
+        </div>
+
+      ) : (
+        <div>
+          <Link
+            href="/login"
+            className="relative flex flex-col items-center space-y-1 text-center w-full p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10"
+          >
+            <LogIn />
+            <p className="text-xs">Login</p>
+          </Link>
+          <Link
+            href="/register"
+            className="relative flex flex-col items-center space-y-1 text-center w-full p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10"
+          >
+            <Milestone />
+            <p className="text-xs">Register</p>
+          </Link>
+        </div>
+      )}
+    </>
+  )
+}
+
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
+  const session = useSession();
+
+
   const segments = useSelectedLayoutSegments();
 
   const navLinks = [
@@ -40,7 +87,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-20 lg:flex-col">
-        <div className="flex grow flex-col items-center justify-between gap-y-5 overflow-y-auto bg-light-secondary dark:bg-dark-secondary px-2 py-8">
+        <div className="flex grow flex-col items-center justify-between gap-y-5 overflow-y-auto bg-light-secondary dark:bg-dark-secondary px-2 py-4">
           <a href="/">
             <SquarePen className="cursor-pointer" />
           </a>
@@ -63,14 +110,21 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
               </Link>
             ))}
           </VerticalIconContainer>
-
-          <Link href="/settings">
-            <Settings className="cursor-pointer" />
-          </Link>
+            <div className='flex flex-col items-center space-y-2'>
+              <Link href="/settings" className='relative flex flex-col items-center space-y-1 text-center p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 w-full'>
+                <Settings className="cursor-pointer w-full" />
+              </Link>
+              {session.data?.user?.role === 'admin' && (
+                <Link href="/admin" className='relative flex flex-col items-center space-y-1 text-center p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 w-full'>
+                  <Milestone className="cursor-pointer w-full" />
+                </Link>
+              )}
+              <AuthContainers sessionStatus={session.status} />
+            </div>
         </div>
       </div>
 
-      <div className="fixed bottom-0 w-full z-50 flex flex-row items-center gap-x-6 bg-light-primary dark:bg-dark-primary px-4 py-4 shadow-sm lg:hidden">
+      <div className="fixed bottom-0 w-full z-50 flex flex-row items-center justify-around gap-x-2 bg-light-primary dark:bg-dark-primary px-4 py-3 shadow-sm lg:hidden">
         {navLinks.map((link, i) => (
           <Link
             href={link.href}
@@ -89,6 +143,14 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
             <p className="text-xs">{link.label}</p>
           </Link>
         ))}
+            <div className='flex flex-col items-center space-y-2'>
+              {session.data?.user?.role === 'admin' && (
+                <Link href="/admin" className='relative flex flex-col items-center space-y-1 text-center p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 w-full'>
+                  <Milestone className="cursor-pointer w-full" />
+                </Link>
+              )}
+              <AuthContainers sessionStatus={session.status} />
+            </div>
       </div>
 
       <Layout>{children}</Layout>

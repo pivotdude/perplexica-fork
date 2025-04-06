@@ -45,4 +45,4 @@ COPY --from=builder /home/perplexica/.next/standalone ./
 COPY --from=builder /home/perplexica/data ./data
 RUN mkdir -p /home/perplexica/uploads
 EXPOSE 3000
-CMD npm run db:migrate && node server.js
+CMD npm run db:migrate && npm run db:seed && node server.js

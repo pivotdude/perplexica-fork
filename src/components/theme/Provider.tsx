@@ -1,4 +1,5 @@
 'use client';
+import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
 
 const ThemeProviderComponent = ({
@@ -8,7 +9,9 @@ const ThemeProviderComponent = ({
 }) => {
   return (
     <ThemeProvider attribute="class" enableSystem={false} defaultTheme="dark">
-      {children}
+      <SessionProvider>
+        {children}
+      </SessionProvider>
     </ThemeProvider>
   );
 };
